@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { Genders, Providers } from "../../Utils/index.js";
+import { GenderEnum, ProviderEnum, RollEnum } from "../../Utils/enums/Enums.js";
 
 const UserSchema = new mongoose.Schema(
   {
@@ -28,15 +28,20 @@ const UserSchema = new mongoose.Schema(
     },
     Phone: String,
     // enumes
+    Roll: {
+      type: Number,
+      enum: Object.values(RollEnum),
+      default: RollEnum.User,
+    },
     Gender: {
-      type: String,
-      enum: Object.values(Genders),
-      default: Genders.Male,
+      type: Number,
+      enum: Object.values(GenderEnum),
+      default: GenderEnum.Male,
     },
     Providers: {
       type: Number,
-      enum: Object.values(Providers),
-      default: Providers.system,
+      enum: Object.values(ProviderEnum),
+      default: ProviderEnum.system,
     },
     // Pictcher
     ProfilePictcher: String,
@@ -50,6 +55,7 @@ const UserSchema = new mongoose.Schema(
     timestamps: true,
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
+    id: true,
   },
 );
 

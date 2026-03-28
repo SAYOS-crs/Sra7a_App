@@ -1,4 +1,4 @@
-export const SuccessRespons = async ({
+export const SuccessRespons = ({
   res,
   status = 200,
   massage = "done",

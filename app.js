@@ -6,9 +6,7 @@ const app = express();
 app.use(express.json());
 Bootstrap(app, express);
 DB_Connect();
-app.all("/*dummy", (req, res) => {
-  res.json({ massage: "not found handler" });
-});
+
 app.listen(PORT, () => {
   console.log(`server is running successfly on ${PORT}`);
 });
