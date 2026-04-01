@@ -24,7 +24,9 @@ const UserSchema = new mongoose.Schema(
     },
     Password: {
       type: String,
-      required: true,
+      required: function () {
+        return this.Providers == ProviderEnum.system;
+      },
     },
     Phone: String,
     // enumes

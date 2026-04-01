@@ -9,7 +9,7 @@ function ErrorRespons({ message = "Error", status = 400, extra }) {
 // exceptions
 export const BadRequstException = ({
   message = "BadRequst Exception",
-  status,
+  status = 400,
   extra = undefined,
 }) => {
   return ErrorRespons({ message, status, extra });
@@ -39,5 +39,10 @@ export const GlobalError = (error, req, res, next) => {
 
   return res
     .status(status)
-    .json({ message: error.message, stack: error.stack, status: status });
+    .json({
+      message: error.message,
+      extra: error.extra,
+      stack: error.stack,
+      status: status,
+    });
 };
