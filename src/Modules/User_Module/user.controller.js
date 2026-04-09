@@ -5,6 +5,8 @@ import { SignatureType } from "../../Utils/enums/Token.Enum.js";
 import { Authorization } from "../../Middlewares/authorization.middleware.js";
 import { RollEnum } from "../../Utils/enums/Enums.js";
 import { LocalFileStorge } from "../../Utils/multer/multer.local.js";
+import ImageTypes from "../../Utils/files-type/images.js";
+import filefilter from "../../Middlewares/filetype.middleware.js";
 
 const router = Router();
 router.patch(
@@ -15,6 +17,8 @@ router.patch(
   Authorization({ AuthorizedRolles: [RollEnum.User, RollEnum.Admin] }),
   // - third middleware for handling file uploud with multer
   LocalFileStorge({ GeneralPath: "Users" }).single("photo"),
+
+  filefilter({ allowedTypes: ImageTypes }),
   // final route
   PatchPhoto,
 );
