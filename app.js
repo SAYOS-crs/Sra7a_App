@@ -5,6 +5,7 @@ import DB_Connect from "./src/DB/connection.js";
 import cors from "cors";
 const app = express();
 app.use(express.json(), cors());
+
 Bootstrap(app, express);
 DB_Connect();
 

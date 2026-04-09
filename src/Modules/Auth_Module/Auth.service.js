@@ -14,7 +14,7 @@ import { Compare } from "../../Utils/security/hash.service.js";
 import { GeneratCredentials } from "../../Utils/security/token/token.controller.js";
 import { RenewRefrshAndAccessTokens } from "../../Utils/security/token/refreshToken.service.js";
 import VerifyGoogleToken from "../../Utils/providers/Google.js";
-import { FindOne, InsertOne } from "../../Utils/repository/user.repository.js";
+import { FindOne, InsertOne } from "../../Utils/repository/repository.js";
 import { ProviderEnum, RollEnum } from "../../Utils/enums/Enums.js";
 // ------------------- login end point ---------------------------
 export const Login = async (req, res) => {

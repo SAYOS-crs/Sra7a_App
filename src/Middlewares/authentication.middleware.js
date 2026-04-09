@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { UserModel } from "../DB/index.js";
 import { SignatureRoll, SignatureType } from "../Utils/enums/Token.Enum.js";
-import { FindOne } from "../Utils/repository/user.repository.js";
+import { FindOne } from "../Utils/repository/repository.js";
 import { GetSignature } from "../Utils/security/token/signature.service.js";
 import { VerifyToken } from "../Utils/security/token/token.service.js";
 import { NotFoundException } from "../Utils/responses/error.respons.js";

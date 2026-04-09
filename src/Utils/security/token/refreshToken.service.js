@@ -1,6 +1,6 @@
 import { UserModel } from "../../../DB/index.js";
 import { SignatureRoll } from "../../enums/Token.Enum.js";
-import { FindOne } from "../../repository/user.repository.js";
+import { FindOne } from "../../repository/repository.js";
 import {
   BadRequstException,
   NotFoundException,

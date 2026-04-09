@@ -1,3 +1,5 @@
+import { UserModel } from "../../DB/index.js";
+import { FindOneByIdAndUpdate } from "../../Utils/repository/repository.js";
 import { NotFoundException } from "../../Utils/responses/error.respons.js";
 import { SuccessRespons } from "../../Utils/responses/success.respons.js";
 
@@ -8,4 +10,13 @@ export const GetProfile = async (req, res) => {
     throw NotFoundException({ message: "not found " });
   }
   return SuccessRespons({ res, massage: "done", data: { user, decoded } });
+};
+
+export const PatchPhoto = async (req, res) => {
+  const result = await FindOneByIdAndUpdate({
+    module: UserModel,
+    id: req.user.id,
+    data: { ProfilePictcher: req.file.RelativFilePath },
+  });
+  return SuccessRespons({ res, massage: "done", data: result });
 };
