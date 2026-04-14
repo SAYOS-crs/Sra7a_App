@@ -3,6 +3,7 @@ import {
   Google_social_provider,
   Login,
   Logout,
+  Logout_Redis,
   refreshToken,
   SignUp,
 } from "./Auth.service.js";
@@ -19,6 +20,12 @@ router.post(
   Authentication({ TokenType: SignatureType.AccessToken }),
   validation({ schema: LogoutSchema }),
   Logout,
+);
+router.post(
+  "/Logout-Redis",
+  Authentication({ TokenType: SignatureType.AccessToken }),
+  validation({ schema: LogoutSchema }),
+  Logout_Redis,
 );
 router.post("/Login-Google", Google_social_provider);
 router.get("/refresh-token", refreshToken);

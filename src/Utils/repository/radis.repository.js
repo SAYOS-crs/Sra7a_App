@@ -1,5 +1,13 @@
 import { Radis } from "../../DB/radis.connection.js";
 
+export const RedisKeyPrefix = ({ userId, jti }) => {
+  return `revoke-token-user:${userId}-jti:${jti}`;
+};
+
+export const RedisUserCredentials = ({ userId }) => {
+  return `user:${userId}-CredentialsDate`;
+};
+
 export const set = async ({ key, value, ttl = null }) => {
   try {
     const StringValue =
@@ -27,10 +35,10 @@ export const get = async ({ key }) => {
 export const update = async ({ key, value, ttl = undefined }) => {
   const StringValue = typeof value == "string" ? value : JSON.stringify(value);
   try {
-    const IsExist = await Radis.EXISTS(key);
-    if (!IsExist) {
-      return false;
-    }
+    // const IsExist = await Radis.EXISTS(key);
+    // if (!IsExist) {
+    //   return null;
+    // }
 
     if (ttl) {
       return await Radis.set(key, StringValue, {

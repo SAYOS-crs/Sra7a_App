@@ -20,4 +20,9 @@ export const REFRESH_USER_SIGNATURE = process.env.REFRESH_USER_SIGNATURE;
 // -----ADMIN
 export const ACCESS_ADMIN_SIGNATURE = process.env.ACCESS_ADMIN_SIGNATURE;
 export const REFRESH_ADMIN_SIGNATURE = process.env.REFRESH_ADMIN_SIGNATURE;
+// ---------------------------------
+// ---------------------------------
+//----- token time
+export const ACCESS_Token_Time = process.env.ACCESS_Token_Time;
+export const REFRESH_Token_Time = process.env.REFRESH_Token_Time;
 export const Google_ClintID = process.env.CLINT_ID;

@@ -25,6 +25,13 @@ import {
   RollEnum,
 } from "../../Utils/enums/Enums.js";
 import TokenModel from "../../DB/Models/token_model.js";
+import {
+  RedisKeyPrefix,
+  RedisUserCredentials,
+  set,
+  update,
+} from "../../Utils/repository/radis.repository.js";
+import { ACCESS_Token_Time } from "../../../config/config.service.js";
 // ------------------- login end point ---------------------------
 export const Login = async (req, res) => {
   const { Email, Password } = req.body;
@@ -91,6 +98,31 @@ export const Logout = async (req, res) => {
         module: UserModel,
         id: req.user.id,
         data: { ChangeCredentials: Date.now() },
+      });
+      status = 200;
+      break;
+  }
+  return SuccessRespons({ res, status, massage: "User Loged out successfly" });
+};
+// ---------------------- Redis Logout ----------------------
+export const Logout_Redis = async (req, res) => {
+  const { flag } = req.body;
+  let status;
+
+  switch (flag) {
+    case LogoutFlags.logout:
+      await set({
+        key: RedisKeyPrefix({ userId: req.user.id, jti: req.decoded.jti }),
+        value: req.decoded.jti,
+        ttl: req.decoded.exp * 1000,
+      });
+      status = 201;
+      break;
+    case LogoutFlags.logoutFromAll:
+      await update({
+        key: RedisUserCredentials({ userId: req.user.id }),
+        value: Date.now(),
+        ttl: ACCESS_Token_Time,
       });
       status = 200;
       break;

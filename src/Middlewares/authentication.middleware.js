@@ -9,6 +9,12 @@ import {
   unauthorizedexception,
 } from "../Utils/responses/error.respons.js";
 import TokenModel from "../DB/Models/token_model.js";
+import {
+  get,
+  RedisKeyPrefix,
+  RedisUserCredentials,
+} from "../Utils/repository/radis.repository.js";
+import CheckRevokedTokenInAllDevices from "../Utils/security/token/revokeToken.service.js";
 
 export const decodeToken = async ({
   Authorization,
@@ -28,33 +34,71 @@ export const decodeToken = async ({
         ? signature.AccessSignature
         : signature.RefreshSignature,
   });
-  // 3. find by id
 
-  // -- search if the token is revoked
+  // -------------------------------------------------------------
+  // -------------------------------------------------------------
+  // -- search if the token is revoked ( mongoose )
   const isTokenRevoked = await FindOne({
     module: TokenModel,
     filter: { jti: decoded.jti },
   });
-
   if (isTokenRevoked) {
-    throw unauthorizedexception({ message: "Token is Revoked" });
+    throw unauthorizedexception({ message: "Token is Revoked (mongoose)" });
   }
-
+  // -------------------------------------------------------------
+  // -------------------------------------------------------------
+  // -------------------  3. find by id---------------------------
   const user = await FindOne({
     module: UserModel,
     filter: { _id: decoded.id },
   });
+  // -------------------------------------------------------------
+  // -------------------------------------------------------------
+  // -- search if the token is revoked ( redis ) ----------------
+  if (
+    await get({
+      key: RedisKeyPrefix({ userId: user.id, jti: decoded.jti }),
+    })
+  ) {
+    throw unauthorizedexception({ message: "Token is Revoked (redis)" });
+  }
+  // -------------------------------------------------------------
+  // --------------------- mongose Credentials check -----------------
   // check if the token time is before the ChangeCredentials or after
   // after = meen the token created after the ChangeCredentials has ben set / updated > valid token
   // before = meen the token created before the ChangeCredentials has set > invalid token
   if (
-    new Date(user.ChangeCredentials).getTime() >
-    new Date(decoded.iat * 1000).getTime()
+    CheckRevokedTokenInAllDevices({
+      credentialsTime: user.ChangeCredentials,
+      iat: decoded.iat,
+    })
   ) {
     throw unauthorizedexception({
-      message: "Credentials Time not matches the iat of token",
+      message: "Credentials Time not matches the iat of token (mongoose)",
     });
   }
+  // -------------------------------------------------------------
+  // -------------------------------------------------------------
+  // ------------------- Redis Credentials check ------------------
+  // check if the token time is before the ChangeCredentials or after
+  // after = meen the token created after the ChangeCredentials has ben set / updated > valid token
+  // before = meen the token created before the ChangeCredentials has set > invalid token
+  // ttl = accesstoken exp
+  const Redis_CredentialsTime = await get({
+    key: RedisUserCredentials({ userId: user.id }),
+  });
+  if (
+    CheckRevokedTokenInAllDevices({
+      credentialsTime: Redis_CredentialsTime,
+      iat: decoded.iat,
+    })
+  ) {
+    throw unauthorizedexception({
+      message: "Credentials Time not matches the iat of token (Redis)",
+    });
+  }
+  // -------------------------------------------------------------
+  // -------------------------------------------------------------
   // 4. return user in req.user
   return { user, decoded };
 };
