@@ -49,5 +49,10 @@ const generalFilds = {
   // Date
   ConfirmEmail: joi.boolean().default(false),
   ChangeCredentials: joi.date(),
+  // ----------add ones
+  OTP: joi
+    .string()
+    .length(6)
+    .pattern(/^(?=.*[0-9])(?=.*[a-zA-Z])[a-zA-Z0-9]+$/),
 };
 export default generalFilds;

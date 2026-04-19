@@ -1,4 +1,4 @@
-export default function OTP_Templet({ Email, OTP }) {
+export default function OTP_Templet({ Email, OTP, subject }) {
   return `<!DOCTYPE html>
 <html lang="en">
   <head>
@@ -74,14 +74,14 @@ export default function OTP_Templet({ Email, OTP }) {
   <body>
     <div class="wrapper">
       <div class="header">
-        <h1>Verify Your Email</h1>
+        <h1>${subject}</h1>
       </div>
       <div class="content">
         <p>Hello,</p>
         <p class="email">${Email}</p>
         <p style="margin-top: 16px;">Use this OTP to complete your verification:</p>
         <div class="otp-box">${OTP}</div>
-        <p class="note">This code is confidential. Do not share it with anyone.</p>
+        <p class="note">This code is confidential. Do not share it with anyone ,<br/> this code well be invalid after 30m</p>
       </div>
       <div class="footer">Sra7a App Security Mail</div>
     </div>

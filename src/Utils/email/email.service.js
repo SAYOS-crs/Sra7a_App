@@ -1,10 +1,10 @@
 import nodemailer from "nodemailer";
 import { EMAIL_pass, EMAIL_user } from "../../../config/config.service.js";
-import { EmailSubject } from "./email.subject.js";
+import { EmailType } from "./email.subject.js";
 
 export default async function SendEmail({
   to,
-  subject = EmailSubject.WellcomeEmail,
+  subject = EmailType.WellcomeEmail,
   text = "",
   html = "",
 }) {

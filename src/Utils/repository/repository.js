@@ -21,14 +21,18 @@ export const InsertOne = async ({ module, data }) => {
 
 // ------------------------------------------------
 export const FindOneByIdAndUpdate = async ({ module, id, data }) => {
+  data.$inc = { __v: 1 };
   const result = module.findByIdAndUpdate(id, data, {
     returnDocument: "after",
+    runValidators: true,
   });
   return await result;
 };
 export const FindOneAndUpdate = async ({ module, filter, data }) => {
+  data.$inc = { __v: 1 };
   const result = module.findOneAndUpdate(filter, data, {
     returnDocument: "after",
+    runValidators: true,
   });
   return await result;
 };
