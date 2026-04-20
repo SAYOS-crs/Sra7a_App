@@ -9,6 +9,7 @@ import { SuccessRespons } from "../../Utils/responses/success.respons.js";
 import {
   BadRequstException,
   ConflictException,
+  ForbiddenException,
   NotFoundException,
 } from "../../Utils/responses/error.respons.js";
 import { Compare } from "../../Utils/security/hash.service.js";
@@ -53,6 +54,7 @@ export const Login = async (req, res) => {
     module: UserModel,
     filter: { Email },
   });
+  if (user.FreezedAt) ForbiddenException({ message: "Account Suspended !" });
   // password check
   const match = await Compare({
     data: Password,

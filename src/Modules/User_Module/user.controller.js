@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { GetProfile, PatchPhoto } from "./user.service.js";
+import { SuspendUser, GetProfile, PatchPhoto } from "./user.service.js";
 import { Authentication } from "../../Middlewares/authentication.middleware.js";
 import { SignatureType } from "../../Utils/enums/Token.Enum.js";
 import { Authorization } from "../../Middlewares/authorization.middleware.js";
@@ -32,5 +32,11 @@ router.get(
   // final route
   GetProfile,
 );
-
+// freez user
+router.delete(
+  "/SuspendUser{/:UserId}",
+  Authentication({ TokenType: SignatureType.AccessToken }),
+  Authorization({ AuthorizedRolles: [RollEnum.User, RollEnum.Admin] }),
+  SuspendUser,
+);
 export default router;

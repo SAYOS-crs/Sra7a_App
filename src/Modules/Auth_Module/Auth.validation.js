@@ -17,11 +17,7 @@ export const SignupSchema = {
     ConfirmPassword: generalFilds.ConfirmPassword,
 
     Phone: generalFilds.Phone.required(),
-
-    Roll: generalFilds.Roll.valid(...Object.values(RollEnum)),
-
     Gender: generalFilds.Gender,
-    Providers: generalFilds.Providers,
     // Pictcher
     ProfilePictcher: generalFilds.ProfilePictcher,
     CoverPictchers: generalFilds.CoverPictchers,

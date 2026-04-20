@@ -60,6 +60,17 @@ const UserSchema = new mongoose.Schema(
       default: false,
     },
     ChangeCredentials: Date,
+    // -------------- freez
+    FreezedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+    FreezedAt: Date,
+    RestoredBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+    RestoredAt: Date,
   },
   {
     collection: "User_Collection",
