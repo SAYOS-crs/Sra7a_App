@@ -39,8 +39,6 @@ export const SuspendUser = async (req, res) => {
     throw ForbiddenException({ message: "Forbidden Action !" });
   // deside witch id  - the id that come from params must be first becz the req.user.id it will come anyway and if it come that mean freez it self
   const Freeze_ID = UserId ?? req.user.id;
-  console.log(UserId, req.user.id);
-
   // baan the user
   const result = await FindOneAndUpdate({
     module: UserModel,
@@ -60,10 +58,14 @@ export const SuspendUser = async (req, res) => {
       },
     },
   });
-  console.log(result);
 
   if (!result) {
     throw BadRequstException({ message: "some thing went wrong ..." });
   }
-  return SuccessRespons({ res, massage: "Account Suspended Successfly" });
+  return SuccessRespons({
+    res,
+    massage: `Account Suspended Successfly ${UserId ? "id from params - (admin)" : "id form token - self suspend"}`,
+  });
 };
+// -------------- Restore User --------------
+export const RestoreUser = async (req, res) => {};
