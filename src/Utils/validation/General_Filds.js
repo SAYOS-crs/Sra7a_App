@@ -34,7 +34,8 @@ const generalFilds = {
   Phone: joi.string().pattern(/^(\+201|01|00201)[0-2,5]{1}[0-9]{8}/),
 
   Roll: joi.number().default(RollEnum.User),
-
+  authorization: joi.string().required(),
+  id: joi.string().length(24).alphanum(),
   Gender: joi
     .number()
     .valid(...Object.values(GenderEnum))
@@ -54,5 +55,7 @@ const generalFilds = {
     .string()
     .length(6)
     .pattern(/^(?=.*[0-9])(?=.*[a-zA-Z])[a-zA-Z0-9]+$/),
+  // message filds
+  content: joi.string().min(3).max(500).trim(),
 };
 export default generalFilds;

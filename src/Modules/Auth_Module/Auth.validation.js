@@ -45,11 +45,6 @@ export const LogoutSchema = {
         .valid(...Object.values(LogoutFlags)),
     })
     .unknown(true),
-  headers: joi
-    .object({
-      authorization: joi.string().required(),
-    })
-    .unknown(true),
 };
 // --------------- password endpint validation -----------------
 // ---------- forget password
