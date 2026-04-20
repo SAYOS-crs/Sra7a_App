@@ -39,3 +39,11 @@ EmailEvent.on(EmailType.ResetPassword, async (data) => {
     html: data.html,
   });
 });
+EmailEvent.on(EmailType.RestoreAccount, async (data) => {
+  await SendEmail({
+    to: data.to,
+    subject: EmailType.RestoreAccount,
+    text: "",
+    html: data.html,
+  });
+});

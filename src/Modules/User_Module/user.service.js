@@ -1,4 +1,5 @@
 import { UserModel } from "../../DB/index.js";
+import { EmailType } from "../../Utils/email/email.subject.js";
 import { RollEnum } from "../../Utils/enums/Enums.js";
 import { set } from "../../Utils/repository/radis.repository.js";
 import {
@@ -10,8 +11,10 @@ import {
   BadRequstException,
   ForbiddenException,
   NotFoundException,
+  unauthorizedexception,
 } from "../../Utils/responses/error.respons.js";
 import { SuccessRespons } from "../../Utils/responses/success.respons.js";
+import { SendOTP, VerifyOTP } from "../../Utils/security/otp/otp.service.js";
 
 export const GetProfile = async (req, res) => {
   // the req is holding new and object has {user  , decoded } data form the auth middleware
@@ -67,7 +70,7 @@ export const SuspendUser = async (req, res) => {
     massage: `Account Suspended Successfly ${UserId ? "id from params - (admin)" : "id form token - self suspend"}`,
   });
 };
-// -------------- Restore User --------------
+// -------------- Restore User by admin--------------
 export const Admin_RestoreUser = async (req, res) => {
   const { UserId } = req.params;
   const user = await FindOneAndUpdate({
@@ -94,4 +97,83 @@ export const Admin_RestoreUser = async (req, res) => {
 
   return SuccessRespons({ res, massage: `Account Restored Successfly` });
 };
-export const Self_RestoreUser = async (req, res) => {};
+// ----
+// ----
+// ----
+// --------------- Restore User by him self-----------------
+export const Self_RestoreUser = async (req, res) => {
+  const { Email } = req.body;
+  // 1. search for user
+  const user = await FindOne({
+    module: UserModel,
+    filter: {
+      Email,
+      FreezedBy: { $exists: true },
+      FreezedAt: { $exists: true },
+    },
+    options: {
+      populate: "FreezedBy",
+    },
+  });
+  // 2. check for user if exists
+  if (!user) {
+    throw NotFoundException({
+      message: "User Not Found or you are not Suspended",
+    });
+  }
+
+  // 3. check if it that same person who Freezed The Account ? if not so hi cant do this action
+  if (user.FreezedBy.id !== user.id) {
+    throw unauthorizedexception({
+      message:
+        "Account Suspended by Admin , you dont have permation to excute this action ",
+    });
+  }
+
+  // send otp
+  await SendOTP({ Email, OTPtype: EmailType.RestoreAccount });
+  return SuccessRespons({
+    res,
+    massage: "Check your Email for OTP",
+  });
+};
+// --- unlock account
+export const ReactivateUser = async (req, res) => {
+  const { OTP, Email } = req.body;
+  const user = await FindOne({
+    module: UserModel,
+    filter: {
+      Email,
+      FreezedBy: { $exists: true },
+      FreezedAt: { $exists: true },
+    },
+  });
+  if (!user) {
+    throw NotFoundException({
+      message: "User not found or the account not suspended",
+    });
+  }
+  // 1. verify OTP
+  await VerifyOTP({ Email, OTP });
+  // 2. Restore the Account if is the same person who Suspend him self
+  const result = await FindOneAndUpdate({
+    module: UserModel,
+    filter: { Email },
+    data: {
+      $unset: {
+        FreezedAt: true,
+        FreezedBy: true,
+      },
+      RestoredAt: Date.now(),
+      RestoredBy: user._id,
+    },
+  });
+  if (!result) {
+    throw BadRequstException({ message: "Something Went Wrong ..." });
+  }
+  return SuccessRespons({
+    res,
+    massage: "Account Restored Successfly ",
+    data: result,
+  });
+};

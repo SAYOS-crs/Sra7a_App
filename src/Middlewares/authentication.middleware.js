@@ -52,6 +52,10 @@ export const decodeToken = async ({
     module: UserModel,
     filter: { _id: decoded.id, ConfirmEmail: true },
   });
+  // --------------------check for if the user suspended--------
+  if (user.FreezedAt) {
+    throw unauthorizedexception({ message: "Account Suspended" });
+  }
   // -------------------------------------------------------------
   // -------------------------------------------------------------
   // -- search if the token is revoked ( redis ) ----------------

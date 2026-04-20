@@ -10,6 +10,12 @@ export const FindOne = async ({
     return await result.exec();
   }
 
+  if (options?.populate) {
+    result.populate(options.populate);
+
+    return await result.exec();
+  }
+
   return await result;
 };
 

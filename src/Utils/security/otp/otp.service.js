@@ -53,12 +53,6 @@ export const SendOTP = async ({
 };
 
 export const VerifyOTP = async ({ Email, OTP }) => {
-  // 0. check for user
-  const user = await FindOne({
-    module: UserModel,
-    filter: { Email, ConfirmEmail: true },
-  });
-  if (!user) throw NotFoundException({ message: "Invalid Email" });
   // 1. get the OTP data from redis
   const { CipherOTP, resendCount } = await Hget_all({
     key: RedisOTPprefix({ Email }),

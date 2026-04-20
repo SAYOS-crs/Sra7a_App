@@ -5,6 +5,7 @@ import {
   PatchPhoto,
   Admin_RestoreUser,
   Self_RestoreUser,
+  ReactivateUser,
 } from "./user.service.js";
 import { Authentication } from "../../Middlewares/authentication.middleware.js";
 import { SignatureType } from "../../Utils/enums/Token.Enum.js";
@@ -52,5 +53,6 @@ router.patch(
   Authorization({ AuthorizedRolles: [RollEnum.Admin] }),
   Admin_RestoreUser,
 );
-router.patch("/self-RestoreUser", Self_RestoreUser);
+router.post("/self-RestoreUser", Self_RestoreUser);
+router.patch("/Reactivate-User", ReactivateUser);
 export default router;
