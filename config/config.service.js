@@ -33,3 +33,5 @@ export const EMAIL_user = process.env.EMAIL_user;
 export const EMAIL_pass = process.env.EMAIL_pass;
 // ---------- OTP tll
 export const OTP_TTL = process.env.OTP_TTL;
+// ----------- cors
+export const Accessple_Origines = process.env.Accessaple_URL;

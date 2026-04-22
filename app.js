@@ -4,12 +4,15 @@ import express from "express";
 import DB_Connect from "./src/DB/connection.js";
 import cors from "cors";
 import RadisConnection from "./src/DB/radis.connection.js";
+import OriginesCors from "./src/Utils/cors/cors.js";
+import helmet from "helmet";
+import chalk from "chalk";
 const app = express();
-app.use(express.json(), cors());
+app.use(express.json(), helmet(), cors(OriginesCors()));
 
 Bootstrap(app, express);
 DB_Connect();
 RadisConnection();
 app.listen(PORT, () => {
-  console.log(`server is running successfly on ${PORT}`);
+  console.log(chalk.green(`server is running successfly on ${PORT}`));
 });
