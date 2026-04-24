@@ -42,26 +42,6 @@ export const get = async ({ key }) => {
   }
 };
 
-export const update = async ({ key, value, ttl = undefined }) => {
-  const StringValue = typeof value == "string" ? value : JSON.stringify(value);
-  try {
-    // const IsExist = await Radis.EXISTS(key);
-    // if (!IsExist) {
-    //   return null;
-    // }
-
-    if (ttl) {
-      return await Radis.set(key, StringValue, {
-        expiration: { type: "EX", value: ttl },
-      });
-    } else {
-      return await Radis.set(key, StringValue);
-    }
-  } catch (error) {
-    console.log("radis update error ", error);
-  }
-};
-
 export const del = async ({ key }) => {
   try {
     return Radis.del(key);

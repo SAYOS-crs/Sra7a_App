@@ -139,19 +139,30 @@ export const Logout_Redis = async (req, res) => {
 
   switch (flag) {
     case LogoutFlags.logout:
-      await set({
+      const IsRevoced = await set({
         key: RedisKeyPrefix({ userId: req.user.id, jti: req.decoded.jti }),
         value: req.decoded.jti,
         ttl: req.decoded.exp * 1000,
       });
+      if (!IsRevoced) {
+        throw BadRequstException({
+          message: "Error while seting the revoked token in redis",
+        });
+      }
       status = 201;
       break;
     case LogoutFlags.logoutFromAll:
-      await update({
+      const RevokeByTime = await set({
         key: RedisUserCredentials({ userId: req.user.id }),
         value: Date.now(),
-        ttl: ACCESS_Token_Time,
+        ttl: 60 * 60,
       });
+      if (!RevokeByTime) {
+        throw BadRequstException({
+          message:
+            "Error while seting the revoked token by Credentials in redis ",
+        });
+      }
       status = 200;
       break;
   }
