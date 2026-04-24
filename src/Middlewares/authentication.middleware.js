@@ -5,6 +5,7 @@ import { FindOne } from "../Utils/repository/repository.js";
 import { GetSignature } from "../Utils/security/token/signature.service.js";
 import { VerifyToken } from "../Utils/security/token/token.service.js";
 import {
+  BadRequstException,
   NotFoundException,
   unauthorizedexception,
 } from "../Utils/responses/error.respons.js";
@@ -15,6 +16,7 @@ import {
   RedisUserCredentials,
 } from "../Utils/repository/radis.repository.js";
 import CheckRevokedTokenInAllDevices from "../Utils/security/token/revokeToken.service.js";
+import UserModule from "../DB/Models/user_model.js";
 
 export const decodeToken = async ({
   Authorization,
@@ -26,6 +28,7 @@ export const decodeToken = async ({
   const signature = await GetSignature(
     Bearer === "User" ? SignatureRoll.user : SignatureRoll.Admin,
   );
+
   // 2. verify token
   const decoded = await VerifyToken({
     token,
@@ -49,19 +52,24 @@ export const decodeToken = async ({
   // -------------------------------------------------------------
   // -------------------  3. find by id---------------------------
   const user = await FindOne({
-    module: UserModel,
-    filter: { _id: decoded.id, ConfirmEmail: true },
+    module: UserModule,
+    filter: {
+      _id: decoded.id,
+    },
   });
+
   // --------------------check for if the user suspended--------
   if (user?.FreezedAt) {
     throw unauthorizedexception({ message: "Account Suspended" });
+  } else if (!user?.ConfirmEmail) {
+    throw BadRequstException({ message: "Confirm your Email" });
   }
   // -------------------------------------------------------------
   // -------------------------------------------------------------
   // -- search if the token is revoked ( redis ) ----------------
   if (
     await get({
-      key: RedisKeyPrefix({ userId: user.id, jti: decoded.jti }),
+      key: RedisKeyPrefix({ userId: user.id, jti: decoded?.jti }),
     })
   ) {
     throw unauthorizedexception({ message: "Token is Revoked (redis)" });

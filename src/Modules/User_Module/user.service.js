@@ -113,7 +113,7 @@ export const Self_RestoreUser = async (req, res) => {
   const user = await FindOne({
     module: UserModel,
     filter: {
-      Email,
+      Email: Email,
       FreezedBy: { $exists: true },
       FreezedAt: { $exists: true },
     },

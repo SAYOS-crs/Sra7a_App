@@ -4,15 +4,15 @@ export const FindOne = async ({
   options = undefined,
   select = "",
 }) => {
-  let result = module.findOne(filter);
-  if (select.length) {
-    result.select(select);
-    return await result.exec();
+  if (options?.populate) {
+    let result = await module.findOne(filter).populate(options.populate);
+    return result;
   }
 
-  if (options?.populate) {
-    result.populate(options.populate);
+  let result = await module.findOne(filter);
 
+  if (select.length) {
+    result.select(select);
     return await result.exec();
   }
 
@@ -25,6 +25,7 @@ export const Find = async ({
   select = "",
 }) => {
   let result = module.find(filter);
+
   if (select.length) {
     result.select(select);
     return await result.exec();

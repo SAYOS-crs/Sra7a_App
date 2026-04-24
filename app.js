@@ -12,7 +12,7 @@ const app = express();
 
 app.use(express.json(), helmet(), cors(OriginesCors()));
 Bootstrap(app, express);
-DB_Connect();
+await DB_Connect();
 RadisConnection();
 app.listen(PORT, () => {
   console.log(chalk.green(`server is running successfly on ${PORT}`));

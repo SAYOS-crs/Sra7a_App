@@ -40,7 +40,7 @@ router.get(
   Authorization({ AuthorizedRolles: [RollEnum.Admin, RollEnum.User] }),
   GetMessages,
 );
-// get all messagees by admin
+// get massage by admin
 router.get(
   "/GetSingleUserMessage/:messageID",
   validation({ schema: GetSinglemessageValidation }),

@@ -55,6 +55,9 @@ export const Login = async (req, res) => {
     filter: { Email },
   });
   if (user?.FreezedAt) ForbiddenException({ message: "Account Suspended !" });
+  if (!user?.ConfirmEmail) {
+    throw BadRequstException({ message: "Email not Verifyed" });
+  }
   // password check
   const match = await Compare({
     data: Password,
@@ -79,10 +82,6 @@ export const SignUp = async (req, res) => {
     module: UserModel,
     filter: { Email },
   });
-
-  if (MatchedEmail?.ConfirmEmail) {
-    throw BadRequstException({ message: "Email not Verifyed" });
-  }
 
   if (MatchedEmail) {
     throw ConflictException({

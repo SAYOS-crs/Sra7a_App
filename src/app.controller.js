@@ -11,7 +11,6 @@ export const limiter = rateLimit({
   windowMs: 3 * 60 * 1000, // 3 minutes
   limit: async function (req) {
     const { country } = geoip.lookup(req.ip) || {};
-    console.log(country);
     // return country == "EG" ? 10 : 1;
     return 10;
   },

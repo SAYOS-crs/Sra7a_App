@@ -26,7 +26,6 @@ export const LogRecoreder = ({ fileName }) => {
   const dualStream = {
     write: (message) => {
       StreamPath.write(message); // Write to file
-      console.log(message.trim()); // Write to console
     },
   };
 
