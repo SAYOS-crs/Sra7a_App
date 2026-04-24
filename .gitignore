@@ -1,5 +1,6 @@
 /.vscode
 /node_modules
 src/Uploudes
+src/logs
 config/.env.dev
 config/.env.prod

@@ -36,7 +36,6 @@ import {
   RedisOTPprefix,
   RedisUserCredentials,
   set,
-  update,
 } from "../../Utils/repository/radis.repository.js";
 import { ACCESS_Token_Time, OTP_TTL } from "../../../config/config.service.js";
 import {
@@ -142,7 +141,7 @@ export const Logout_Redis = async (req, res) => {
       const IsRevoced = await set({
         key: RedisKeyPrefix({ userId: req.user.id, jti: req.decoded.jti }),
         value: req.decoded.jti,
-        ttl: req.decoded.exp * 1000,
+        ttl: 2 * 60 * 60,
       });
       if (!IsRevoced) {
         throw BadRequstException({
