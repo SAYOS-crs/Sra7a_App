@@ -17,12 +17,11 @@ import path from "node:path";
 //   );
 // };
 export const LogRecoreder = ({ fileName }) => {
-  const AbsolutePath = path.resolve("./src/logs");
-
-  const StreamPath = fs.createWriteStream(
-    path.join(AbsolutePath, `${fileName}.log`),
-    { flags: "a" },
-  );
+  const AbsolutePath = path.resolve(`./src/logs/${fileName}.log`);
+  if (fs.existsSync(AbsolutePath)) {
+    fs.mkdirSync(AbsolutePath, { recursive: true });
+  }
+  const StreamPath = fs.createWriteStream(AbsolutePath, { flags: "a" });
   const dualStream = {
     write: (message) => {
       StreamPath.write(message); // Write to file
