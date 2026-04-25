@@ -18,7 +18,7 @@ import path from "node:path";
 // };
 export const LogRecoreder = ({ fileName }) => {
   const AbsolutePath = path.resolve(`./src/logs/${fileName}.log`);
-  if (fs.existsSync(AbsolutePath)) {
+  if (!fs.existsSync(AbsolutePath)) {
     fs.mkdirSync(AbsolutePath, { recursive: true });
   }
   const StreamPath = fs.createWriteStream(AbsolutePath, { flags: "a" });
