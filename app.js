@@ -4,13 +4,12 @@ import express from "express";
 import DB_Connect from "./src/DB/connection.js";
 import cors from "cors";
 import RadisConnection from "./src/DB/radis.connection.js";
-import OriginesCors from "./src/Utils/cors/cors.js";
 import helmet from "helmet";
 import chalk from "chalk";
 
 const app = express();
 
-app.use(express.json(), helmet(), cors(OriginesCors()));
+app.use(express.json(), helmet(), cors());
 Bootstrap(app, express);
 await DB_Connect();
 RadisConnection();
