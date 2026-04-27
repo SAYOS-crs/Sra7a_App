@@ -9,9 +9,7 @@ import chalk from "chalk";
 import { openRouterPage } from "./src/Utils/page/page.js";
 
 const app = express();
-app.use("/", (req, res) => {
-  res.send(openRouterPage());
-});
+
 app.use(express.json(), helmet(), cors());
 Bootstrap(app, express);
 await DB_Connect();

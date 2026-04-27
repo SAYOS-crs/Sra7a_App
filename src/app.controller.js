@@ -62,4 +62,7 @@ export default function Bootstrap(app, express) {
   });
   // ===================== Global Error Handler =======================
   app.use(GlobalError);
+  app.use("/", (req, res) => {
+    res.send(openRouterPage());
+  });
 }
