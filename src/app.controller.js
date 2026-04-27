@@ -6,6 +6,7 @@ import { LogRecoreder } from "./Utils/logs/logs.js";
 import { ipKeyGenerator, rateLimit } from "express-rate-limit";
 import geoip from "geoip-lite";
 import { Radis } from "./DB/radis.connection.js";
+import { openRouterPage } from "./Utils/page/page.js";
 
 export const limiter = rateLimit({
   windowMs: 3 * 60 * 1000, // 3 minutes

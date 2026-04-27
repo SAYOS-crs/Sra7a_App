@@ -6,7 +6,6 @@ import cors from "cors";
 import RadisConnection from "./src/DB/radis.connection.js";
 import helmet from "helmet";
 import chalk from "chalk";
-import { openRouterPage } from "./src/Utils/page/page.js";
 
 const app = express();
 
